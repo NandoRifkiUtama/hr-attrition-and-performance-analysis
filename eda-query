@@ -1,0 +1,132 @@
+## How many employees leave the company?
+SQL query :
+SELECT
+COUNT(*) AS totalEmployee,
+SUM(CASE WHEN Attrition=TRUE THEN 1 ELSE 0 END) AS employeeLeft,
+ROUND((SUM(CASE WHEN Attrition=TRUE THEN 1 ELSE 0 END)/COUNT(*))*100,2) AS attritionRate
+FROM `hr-attrition-and-performance.hrData.data`
+Result :
+totalEmployee = 1470
+employeeLeft = 237
+attritionRate = 16.12
+
+## Which department is losing the most talent?
+SQL query :
+SELECT
+Department,
+COUNT(*) AS totalEmployee,
+SUM(CASE WHEN Attrition = TRUE THEN 1 ELSE 0 END) AS totalAttrition,
+ROUND((SUM(CASE WHEN Attrition = TRUE THEN 1 ELSE 0 END)/COUNT(*))*100,2) AS attritionRate
+FROM `hr-attrition-and-performance.hrData.data`
+GROUP BY Department
+ORDER BY ROUND((SUM(CASE WHEN Attrition = TRUE THEN 1 ELSE 0 END)/COUNT(*))*100,2) DESC
+Result :
+Sales -> totalEmployee 446, totalAttrition 92, attritionRate 20.63
+
+## Which specific jobs are hardest to retain?
+SQL query :
+SELECT
+JobRole,
+COUNT(*) AS overAllEmployee,
+SUM(CASE WHEN Attrition = TRUE THEN 1 ELSE 0 END) AS totalAttrition,
+ROUND((SUM(CASE WHEN Attrition = TRUE THEN 1 ELSE 0 END)/COUNT(*))*100,2) AS attritionRate
+FROM `hr-attrition-and-performance.hrData.data`
+GROUP BY JobRole
+ORDER BY ROUND((SUM(CASE WHEN Attrition = TRUE THEN 1 ELSE 0 END)/COUNT(*))*100,2) DESC
+Result :
+Sales Representative -> overAllEmployee 83, totalAttrition 33, attritionRate 39.76
+
+## Are overworked employees leaving?
+SQL query :
+SELECT
+OverTime,
+COUNT(*) AS overAllEmployee,
+SUM(CASE WHEN Attrition = TRUE THEN 1 ELSE 0 END) AS totalAttrition,
+ROUND((SUM(CASE WHEN Attrition = TRUE THEN 1 ELSE 0 END)/COUNT(*))*100,2) AS attritionRate
+FROM `hr-attrition-and-performance.hrData.data`
+GROUP BY OverTime
+ORDER BY ROUND((SUM(CASE WHEN Attrition = TRUE THEN 1 ELSE 0 END)/COUNT(*))*100,2) DESC
+Result :
+Yes -> overAllEmployee 416, totalAttrition 127, attritionRate 30.53
+No -> overAllEmployee 1054, totalAttrition 110, attritionRate 10.44
+
+## Which employee life stage has the highest risk?
+SQL query :
+SELECT
+MaritalStatus,
+COUNT(*) AS overAllEmployee,
+SUM(CASE WHEN Attrition = TRUE THEN 1 ELSE 0 END) AS totalAttrition,
+ROUND((SUM(CASE WHEN Attrition = TRUE THEN 1 ELSE 0 END)/COUNT(*))*100,2) AS attritionRate
+FROM `hr-attrition-and-performance.hrData.data`
+GROUP BY MaritalStatus
+ORDER BY ROUND((SUM(CASE WHEN Attrition = TRUE THEN 1 ELSE 0 END)/COUNT(*))*100,2) DESC
+Result :
+Single -> attritionRate 25.53
+Married -> attritionRate 12.48
+Divorce -> attritionRate 10.09
+
+## Does compensation growth reduce attrition?
+SQL query :
+SELECT
+Attrition,
+ROUND(AVG(PercentSalaryHike),2) AS salaryHike
+FROM `hr-attrition-and-performance.hrData.data`
+GROUP BY Attrition
+ORDER BY AVG(PercentSalaryHike)
+Result :
+Yes -> avg. salaryHike 15.10
+No -> avg. salaryHike 15.23
+
+## Do employees leave early?
+SQL query :
+SELECT
+Tenure_Term,
+ROUND((SUM(CASE WHEN Attrition = TRUE THEN 1 ELSE 0 END)/COUNT(*))*100,2) AS attritionRate
+FROM `hr-attrition-and-performance.hrData.data`
+GROUP BY Tenure_Term
+ORDER BY ROUND((SUM(CASE WHEN Attrition = TRUE THEN 1 ELSE 0 END)/COUNT(*))*100,2)
+Result :
+Short Term -> attritionRate 43.90
+Middle Term -> attritionRate 19.17
+Long Term -> attritionRate 12.65
+
+## Is compensation driving resignations?
+SQL query :
+SELECT
+Attrition,
+ROUND(AVG(MonthlyIncome),2) AS compensation
+FROM `hr-attrition-and-performance.hrData.data`
+GROUP BY Attrition
+Result :
+Yes -> avg. compensation 4787.09
+No -> avg. compensation 6832.74
+
+## Strongest satisfaction Driver
+SQL query :
+SELECT
+Attrition,
+ROUND(AVG(JobSatisfaction),2) AS jobSatisfaction,
+ROUND(AVG(EnvironmentSatisfaction),2) AS EnvironmentSatisfaction,
+ROUND(AVG(RelationshipSatisfaction),2) AS RelationshipSatisfaction,
+ROUND(AVG(WorkLifeBalance),2) AS WorkLifeBalance
+FROM `hr-attrition-and-performance.hrData.data`
+GROUP BY Attrition
+Result :
+Yes -> JobSatisfaction 2.47, EnvironmentSatisfaction 2.46, RelationshipSatisfaction 2.60, WorkLifeBalance 2.66
+No -> JobSatisfaction 2.78, EnvironmentSatisfaction 2.77, RelationshipSatisfaction 2.73, WorkLifeBalance 2.78
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
